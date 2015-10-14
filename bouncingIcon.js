@@ -21,6 +21,7 @@ To stop bouncing, call BI.stop().
 var BI = 
 {
 	instance: null,
+	div: null,
 	icon: null,
 	iconX: 0,
 	iconY: 0,
@@ -38,13 +39,18 @@ var BI =
 		
 		this.stop();
 
+		this.div = document.createElement("div");
+		this.div.style.position = "absolute";
+		this.div.style.zIndex = 100000;
+
 		this.icon = document.createElement("img");
 		this.icon.src = imageUrl;
 		this.icon.style.position = "absolute";
 		this.icon.width = 32;
 		this.icon.height = 32;
-		this.icon.style.zIndex = 100000;
-		document.body.appendChild(this.icon);
+
+		this.div.appendChild(this.icon);
+		document.body.appendChild(this.div);
 
 		this.bounceIndex = 0;
 		this.bounceDir = 1;
@@ -54,23 +60,27 @@ var BI =
 		switch (position)
 		{	
 			case "topLeft":
-				this.iconX = 10;
-				this.iconY = 30;
+				this.div.style.position = "fixed";
+				this.div.style.left = "10px";
+				this.div.style.top = "30px";
 				break;
 
 			case "topRight":
-				this.iconX = window.innerWidth - 42;
-				this.iconY = 30;
+				this.div.style.position = "fixed";
+				this.div.style.right = "40px";
+				this.div.style.top = "30px";
 				break;
 
 			case "bottomLeft":
-				this.iconX = 10;
-				this.iconY = window.innerHeight - 42;
+				this.div.style.position = "fixed";
+				this.div.style.left = "10px";
+				this.div.style.bottom = "40px";
 				break;
 
 			case "bottomRight":
-				this.iconX = window.innerWidth - 42;
-				this.iconY = window.innerHeight - 42;
+				this.div.style.position = "fixed";
+				this.div.style.right = "40px";
+				this.div.style.bottom = "40px";
 				break;
 
 			default:
@@ -82,17 +92,35 @@ var BI =
 	stop: function()
 	{
 		window.removeEventListener("mousemove", this.moving);
-		if (this.icon !== null)
+		if (this.div !== null)
 		{
-			document.body.removeChild(this.icon);
-			this.icon = null;
+			document.body.removeChild(this.div);
+			this.div = null;
 			clearInterval(this.bounceIntervalId);
 		}
 	},
 	moving: function(e)
 	{
-		instance.iconX = e.clientX + 12;
-		instance.iconY = e.clientY + 12;
+		var posX = 0;
+		var posY = 0;
+		
+		if (!e)
+			e = window.event;
+		if (e.pageX || e.pageY)
+		{
+			posX = e.pageX;
+			posY = e.pageY;
+		}
+		else if (e.clientX || e.clientY)
+		{
+			posX = e.clientX + document.body.scrollLeft +
+				   document.documentElement.scrollLeft;
+			posY = e.clientY + document.body.scrollTop + 
+				   document.documentElement.scrollTop;
+		}
+		
+		instance.div.style.left = (posX + 12) + "px";
+		instance.div.style.top = (posY + 12) + "px";
 	},
 	bouncing: function()
 	{
