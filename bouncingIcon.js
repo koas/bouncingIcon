@@ -145,3 +145,5 @@ var BI =
 		}
 	}
 };
+
+module.exports = BI;

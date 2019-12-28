@@ -1,0 +1,10 @@
+{
+	"name": "@koas/bouncing-icon",
+	"author": "Koas",
+	"version": "1.0.1",
+	"description": "Makes an image bounce to indicate loading, as in KDE",
+	"license": "MIT",
+	"repository": "koas/bouncingIcon",
+	"main": "package.js",
+	"keywords": ["bounce", "bouncing", "loader", "KDE"]
+}
